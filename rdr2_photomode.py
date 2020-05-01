@@ -3,6 +3,7 @@ import errno
 
 # You might need to adjust this path depending on your locale
 dir = os.path.expanduser('~') + "\Documents\Rockstar Games\Red Dead Redemption 2\Profiles"
+print("Opening %s" % dir)
 
 def mkdir_p(path):
     try:
@@ -14,9 +15,14 @@ def mkdir_p(path):
             raise
 
 def convert(name, path):
-    with open(path + "/" + name, 'rb') as in_file:
-        with open("Images/" +name + '.jpg', 'wb') as out_file:
+    in_filename = path + "/" + name
+    out_filename = "Images/" + name + '.jpg'
+    print("Converting %s " % in_filename)
+    with open(in_filename, 'rb') as in_file:
+        statinfo = os.stat(in_filename)
+        with open(out_filename, 'wb') as out_file:
             out_file.write(in_file.read()[300:])
+            os.utime(out_filename, (statinfo.st_atime, statinfo.st_mtime))
 
 mkdir_p( "Images" )
 
